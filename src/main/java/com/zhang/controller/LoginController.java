@@ -1,5 +1,6 @@
 package com.zhang.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.zhang.pojo.Result;
 import com.zhang.pojo.User;
 import com.zhang.service.UserService;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.HtmlUtils;
 
+import javax.servlet.http.HttpSession;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,21 +25,19 @@ public class LoginController {
     @CrossOrigin
     @RequestMapping("/login")
     @ResponseBody
-    public Result login(@RequestBody User requestUser) {
+    public Result login(@RequestBody User requestUser, HttpSession session) {
         String username = requestUser.getUsername();
         username = HtmlUtils.htmlEscape(username);
         String password = requestUser.getPassword();
         password = HtmlUtils.htmlEscape(password);
-        Map<String,Object> map = new HashMap<String,Object>();
-        //key是字段名，value是字段值
-        map.put("username", username);
-        map.put("password", password);
-        Collection<User> userLists = userService.listByMap(map);
-        if (userLists.isEmpty() || userLists.size() == 0) {
-
-
+        QueryWrapper<User> queryWrapper = new QueryWrapper<User>();
+        queryWrapper.eq("username", username);
+        queryWrapper.eq("password", password);
+        User user = userService.getOne(queryWrapper);
+        if (user == null) {
             return new Result(400);
         } else {
+            session.setAttribute("user", user);
             return new Result(200);
         }
     }

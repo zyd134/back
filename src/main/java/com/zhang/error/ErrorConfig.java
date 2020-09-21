@@ -12,7 +12,7 @@ public class ErrorConfig implements ErrorPageRegistrar {
     @Override
     public void registerErrorPages(ErrorPageRegistry registry) {
         ErrorPage error404Page = new ErrorPage(HttpStatus.NOT_FOUND, "/index.html");
-        registry.addErrorPages(error404Page);
+         registry.addErrorPages(error404Page);
     }
 
 }
