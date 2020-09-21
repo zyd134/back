@@ -34,6 +34,7 @@ public class LoginController {
         map.put("password", password);
         Collection<User> userLists = userService.listByMap(map);
         if (userLists.isEmpty() || userLists.size() == 0) {
+
             return new Result(400);
         } else {
             return new Result(200);
